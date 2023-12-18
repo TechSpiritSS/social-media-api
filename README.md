@@ -38,7 +38,7 @@ This Node.js API serves as the backend for the Banao platform. It allows users t
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/your-repo.git
+   git clone https://github.com/username/repo.git
    ```
 
 2. Install the dependencies:
@@ -52,10 +52,10 @@ This Node.js API serves as the backend for the Banao platform. It allows users t
 
    ```env
    PORT=3000
-   MONGO_URI=mongodb://localhost:27017/your-database
-   JWT_SECRET=your-secret-key
-   EMAIL=your-email@gmail.com
-   PASSWORD=your-email-password
+   MONGO_URI=mongodb://localhost:27017/
+   JWT_SECRET=secret-key
+   EMAIL=email@gmail.com
+   PASSWORD=email-password
    ```
 
 4. Run the application:
@@ -82,33 +82,33 @@ The API can be accessed at `http://localhost:3000/`.
 
 | Endpoint                | Method | Description                                 |
 | ----------------------- | ------ | ------------------------------------------- |
-| `/api/posts/create`     | POST   | Create a new post                           |
+| `/api/posts/new`        | POST   | Create a new post                           |
 | `/api/posts/all`        | GET    | Get all posts                               |
-| `/api/posts/:id`        | GET    | Get a specific post by ID                   |
-| `/api/posts/mine`       | GET    | Get posts created by the authenticated user |
-| `/api/posts/:id/update` | PUT    | Update a post by ID                         |
-| `/api/posts/:id/delete` | DELETE | Delete a post by ID                         |
+| `/api/posts/me`         | GET    | Get posts created by the authenticated user |
+| `/api/posts/me/:postId` | GET    | Get a specific post by ID                   |
+| `/api/posts/me/:postId` | PUT    | Update a post by ID                         |
+| `/api/posts/me/:postId` | DELETE | Delete a post by ID                         |
 
 ### Like Routes
 
-| Endpoint            | Method | Description           |
-| ------------------- | ------ | --------------------- |
-| `/api/likes/toggle` | POST   | Toggle like on a post |
+| Endpoint          | Method | Description           |
+| ----------------- | ------ | --------------------- |
+| `/api/posts/like` | POST   | Toggle like on a post |
 
 ### Comment Routes
 
-| Endpoint               | Method | Description                |
-| ---------------------- | ------ | -------------------------- |
-| `/api/comments/add`    | POST   | Add a comment to a post    |
-| `/api/comments/delete` | DELETE | Delete a comment on a post |
-| `/api/comments/update` | PUT    | Update a comment on a post |
+| Endpoint              | Method | Description                |
+| --------------------- | ------ | -------------------------- |
+| `/api/posts/comment`  | POST   | Add a comment to a post    |
+| `/api/posts/comment/` | DELETE | Delete a comment on a post |
+| `/api/posts/comment`  | PUT    | Update a comment on a post |
 
 ### Password Reset Routes
 
-| Endpoint                | Method | Description                                     |
-| ----------------------- | ------ | ----------------------------------------------- |
-| `/api/forgot-password`  | POST   | Request a password reset                        |
-| `/api/set-new-password` | POST   | Set a new password after receiving a reset code |
+| Endpoint                      | Method | Description                                     |
+| ----------------------------- | ------ | ----------------------------------------------- |
+| `/api/users/forgot-password`  | POST   | Request a password reset                        |
+| `/api/users/set-new-password` | POST   | Set a new password after receiving a reset code |
 
 ## Database
 
@@ -126,249 +126,711 @@ Errors are handled using a custom error handler middleware. Detailed error messa
 
 ### Register User
 
-#### Request
+#### Create a New User
 
-```http
-POST /api/users/register
-```
+Create a new user account.
+
+**URL**: `POST /api/users/register`
+
+**Headers**:
+
+- `Content-Type: application/json`
+
+**Authorization**:
+
+- Bearer Token (Not required for registration)
+
+**Body**:
 
 ```json
 {
-  "name": "John Doe",
-  "email": "john.doe@example.com",
-  "username": "johndoe",
+  "name": "Sidharth Sethi",
+  "email": "sidharth.sherry@gmail.com",
+  "username": "techspiritss",
   "password": "securepassword"
 }
 ```
 
-#### Response
+#### Example Request (HTTPS JS API)
+
+```javascript
+const requestOptions = {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    name: 'Sidharth Sethi',
+    email: 'sidharth.sherry@gmail.com',
+    username: 'techspiritss',
+    password: 'securepassword',
+  }),
+};
+
+fetch('https://localhost:3000/api/users', requestOptions)
+  .then((response) => response.json())
+  .then((data) => console.log(data))
+  .catch((error) => console.error('Error:', error));
+```
+
+#### Example Response
 
 ```json
 {
   "success": "User registered",
-  "username": "johndoe",
+  "username": "techspiritss",
   "token": "eyJhbGciOiJIUzI1NiIsIn..."
 }
 ```
 
 ### Login User
 
-#### Request
+#### User Login
 
-```http
-POST /api/users/login
-```
+Log in with a registered user account.
+
+**URL**: `POST /api/users/login`
+
+**Headers**:
+
+- `Content-Type: application/json`
+
+**Authorization**:
+
+- Bearer Token (Not required for login)
+
+**Body**:
 
 ```json
 {
-  "email": "john.doe@example.com",
+  "email": "sidharth.sherry@gmail.com",
   "password": "securepassword"
 }
 ```
 
-#### Response
+#### Example Request (HTTPS JS API)
+
+```javascript
+const requestOptions = {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email: 'sidharth.sherry@gmail.com',
+    password: 'securepassword',
+  }),
+};
+
+fetch('https://localhost:3000/api/users/login', requestOptions)
+  .then((response) => response.json())
+  .then((data) => console.log(data))
+  .catch((error) => console.error('Error:', error));
+```
+
+#### Example Response
 
 ```json
 {
   "success": "Logged in",
-  "username": "johndoe",
+  "username": "techspiritss",
   "token": "eyJhbGciOiJIUzI1NiIsIn..."
 }
 ```
 
-### Get User Profile
+### Forgot Password
 
-#### Request
+#### Request Password Reset
 
-```http
-GET /api/users/profile
-```
+Initiate the password reset process.
 
-#### Response
+**URL**: `POST /api/users/forgot-password`
+
+**Headers**:
+
+- `Content-Type: application/json`
+
+**Authorization**:
+
+- Bearer Token (Not required for password reset)
+
+**Body**:
 
 ```json
 {
-  "success": "User details fetched",
-  "name": "John Doe",
-  "username": "johndoe"
+  "email": "sidharth.sherry@gmail.com"
+}
+```
+
+#### Example Request (HTTPS JS API)
+
+```javascript
+const requestOptions = {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email: 'sidharth.sherry@gmail.com',
+  }),
+};
+
+fetch('https://localhost:3000/api/users/forgot-password', requestOptions)
+  .then((response) => response.json())
+  .then((data) => console.log(data))
+  .catch((error) => console.error('Error:', error));
+```
+
+#### Example Response
+
+```json
+{
+  "success": "A code has been sent to your email. Please check and use it."
+}
+```
+
+### Set New Password
+
+#### Set New Password
+
+Set a new password after the password reset process.
+
+**URL**: `POST /api/users/set-new-password`
+
+**Headers**:
+
+- `Content-Type: application/json`
+
+**Authorization**:
+
+- Bearer Token (Not required for setting a new password)
+
+**Body**:
+
+```json
+{
+  "email": "sidharth.sherry@gmail.com",
+  "newPassword": "newsecurepassword",
+  "code": 1234
+}
+```
+
+#### Example Request (HTTPS JS API)
+
+```javascript
+const requestOptions = {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email: 'sidharth.sherry@gmail.com',
+    newPassword: 'newsecurepassword',
+    code: 1234,
+  }),
+};
+
+fetch('https://localhost:3000/api/users/set-new-password', requestOptions)
+  .then((response) => response.json())
+  .then((data) => console.log(data))
+  .catch((error) => console.error('Error:', error));
+```
+
+#### Example Response
+
+```json
+{
+  "success": "Password updated successfully!"
 }
 ```
 
 ## Post Routes
 
-### Create Post
-
-#### Request
-
-```http
-POST /api/posts/create
-```
-
-```json
-{
-  "title": "My First Post",
-  "category": "Travel",
-  "description": "This is the content of my first post."
-}
-```
-
-#### Response
-
-```json
-{
-  "_id": "609d77e4f5275422a056ea0a",
-  "user": {
-    "name": "John Doe",
-    "username": "johndoe"
-  },
-  "title": "My First Post",
-  "category": "Travel",
-  "description": "This is the content of my first post.",
-  "likes": { "_id": "609d77e4f5275422a056ea0b", "like": [] },
-  "comments": { "_id": "609d77e4f5275422a056ea0c", "comment": [] },
-  "createdAt": "2021-05-13T14:17:00.628Z",
-  "updatedAt": "2021-05-13T14:17:00.628Z",
-  "__v": 0
-}
-```
-
 ### Get All Posts
 
-#### Request
+Get all the posts from all users.
 
-```http
-GET /api/posts/all
+**URL**: `GET /api/posts/all`
+
+**Headers**:
+
+- `Authorization`: Bearer Token
+
+#### Example Request (HTTPS JS API)
+
+```javascript
+const requestOptions = {
+  method: 'GET',
+  headers: {
+    Authorization: 'Bearer YOUR_TOKEN',
+  },
+};
+
+fetch('https://localhost:3000/api/posts/all', requestOptions)
+  .then((response) => response.json())
+  .then((data) => console.log(data))
+  .catch((error) => console.error('Error:', error));
 ```
 
-#### Response
+#### Example Response
 
 ```json
 [
   {
-    "_id": "609d77e4f5275422a056ea0a",
+    "_id": "6580bd1c6a007fbc371a0996",
     "user": {
-      "name": "John Doe",
-      "username": "johndoe"
+      "_id": "6580bc636a007fbc371a0993",
+      "name": "Sidharth Sethi",
+      "username": "sidharth_sethi"
     },
-    "title": "My First Post",
+    "title": "Amazing Travel Adventure",
     "category": "Travel",
-    "description": "This is the content of my first post.",
-    "likes": { "_id": "609d77e4f5275422a056ea0b", "like": [] },
-    "comments": { "_id": "609d77e4f5275422a056ea0c", "comment": [] },
-    "createdAt": "2021-05-13T14:17:00.628Z",
-    "updatedAt": "2021-05-13T14:17:00.628Z",
-    "__v": 0
+    "description": "I recently had an incredible travel adventure to a beautiful destination. The landscapes were breathtaking, and I can't wait to share my experience with you!",
+    "createdAt": "2023-12-18T21:43:56.574Z",
+    "updatedAt": "2023-12-18T21:43:56.798Z",
+    "__v": 0,
+    "comments": {
+      "_id": "6580bd1c6a007fbc371a099a",
+      "comment": [
+        {
+          "user": "6580bc636a007fbc371a0993",
+          "comment": " I had a great adventure there too!!!",
+          "_id": "6580be206a007fbc371a0a26"
+        },...
+      ]
+    },
+    "likes": {
+      "_id": "6580bd1c6a007fbc371a0998",
+      "like": [
+        {
+          "user": "6580bc636a007fbc371a0993",
+          "_id": "6580d0d92c6ca9d992cd320e"
+        }...
+      ]
+    }...
+  },
+```
+
+### Get My Posts
+
+Get all of the logged-in user's posts.
+
+**URL**: `GET /api/posts/me`
+
+**Headers**:
+
+- `Authorization`: Bearer Token
+
+#### Example Request (HTTPS JS API)
+
+```javascript
+const requestOptions = {
+  method: 'GET',
+  headers: {
+    Authorization: 'Bearer YOUR_TOKEN',
+  },
+};
+
+fetch('https://localhost:3000/api/posts/me', requestOptions)
+  .then((response) => response.json())
+  .then((data) => console.log(data))
+  .catch((error) => console.error('Error:', error));
+```
+
+#### Example Response
+
+```json
+[
+  {
+    "_id": "6580bd1c6a007fbc371a0996",
+    "user": {
+      "_id": "6580bc636a007fbc371a0993",
+      "name": "Sidharth Sethi",
+      "username": "sidharth_sethi"
+    },
+    "title": "Amazing Travel Adventure",
+    "category": "Travel",
+    "description": "I recently had an incredible travel adventure to a beautiful destination. The landscapes were breathtaking, and I can't wait to share my experience with you!",
+    "createdAt": "2023-12-18T21:43:56.574Z",
+    "updatedAt": "2023-12-18T21:43:56.798Z",
+    "__v": 0,
+    "comments": {
+      "_id": "6580bd1c6a007fbc371a099a",
+      "comment": [
+        {
+          "user": "6580bc636a007fbc371a0993",
+          "comment": " I had a great adventure there too!!!",
+          "_id": "6580be206a007fbc371a0a26"
+        },...
+      ]
+    },
+    "likes": {
+      "_id": "6580bd1c6a007fbc371a0998",
+      "like": [
+        {
+          "user": "6580bc636a007fbc371a0993",
+          "_id": "6580d0d92c6ca9d992cd320e"
+        }...
+      ]
+    }...
+  },
+```
+
+### Get My Post By Id
+
+Gets the user's posts and then looks for the entered id.
+
+**URL**: `GET /api/posts/me/:postId`
+
+**Headers**:
+
+- `Authorization`: Bearer Token
+
+#### Example Request (HTTPS JS API)
+
+```javascript
+const requestOptions = {
+  method: 'GET',
+  headers: {
+    Authorization: 'Bearer YOUR_TOKEN',
+  },
+};
+
+fetch(
+  'https://localhost:3000/api/posts/me/6580bd1c6a007fbc371a0996',
+  requestOptions
+)
+  .then((response) => response.json())
+  .then((data) => console.log(data))
+  .catch((error) => console.error('Error:', error));
+```
+
+#### Example Response
+
+```json
+[
+  {
+    "_id": "6580bd1c6a007fbc371a0996",
+    "user": {
+      "_id": "6580bc636a007fbc371a0993",
+      "name": "Sidharth Sethi",
+      "username": "sidharth_sethi"
+    },
+    "title": "Amazing Travel Adventure",
+    "category": "Travel",
+    "description": "I recently had an incredible travel adventure to a beautiful destination. The landscapes were breathtaking, and I can't wait to share my experience with you!",
+    "createdAt": "2023-12-18T21:43:56.574Z",
+    "updatedAt": "2023-12-18T21:43:56.798Z",
+    "__v": 0,
+    "comments": {
+      "_id": "6580bd1c6a007fbc371a099a",
+      "comment": [
+        {
+          "user": "6580bc636a007fbc371a0993",
+          "comment": " I had a great adventure there too!!!",
+          "_id": "6580be206a007fbc371a0a26"
+        },
+        {
+          "user": "6580bc636a007fbc371a0993",
+          "comment": "HOHOHOHOHOOHOHOHO",
+          "_id": "6580be2f6a007fbc371a0a2a"
+        },
+        {
+          "user": "6580bc636a007fbc371a0993",
+          "comment": "Best!!!!!!!!",
+          "_id": "6580be436a007fbc371a0a31"
+        },
+        {
+          "user": "6580bc636a007fbc371a0993",
+          "comment": "Best!!!!!!!!",
+          "_id": "6580c9239511002753257e04"
+        },
+        {
+          "user": "6580bc636a007fbc371a0993",
+          "comment": "Niceeee",
+          "_id": "6580d1272c6ca9d992cd3213"
+        }
+      ]
+    },
+    "likes": {
+      "_id": "6580bd1c6a007fbc371a0998",
+      "like": [
+        {
+          "user": "6580bc636a007fbc371a0993",
+          "_id": "6580d0d92c6ca9d992cd320e"
+        }
+      ]
+    }
   }
-  // ... more posts
 ]
 ```
 
-### Get Post by ID
+#### Get a Single Post
 
-#### Request
+Gets a post based on the id entered in the URL.
 
-```http
-GET /api/posts/:id
+**URL**: `GET /api/posts/all/:postId`
+
+**Headers**:
+
+- `Authorization`: Bearer Token
+
+#### Example Request (HTTPS JS API)
+
+```javascript
+const requestOptions = {
+  method: 'GET',
+  headers: {
+    Authorization: 'Bearer YOUR_TOKEN',
+  },
+};
+
+fetch(
+  'https://localhost:3000/api/posts/all/6580bd1c6a007fbc371a0996',
+  requestOptions
+)
+  .then((response) => response.json())
+  .then((data) => console.log(data))
+  .catch((error) => console.error('Error:', error));
 ```
 
-#### Response
+#### Example Response
 
 ```json
 {
-  "_id": "609d77e4f5275422a056ea0a",
+  "_id": "6580bd1c6a007fbc371a0996",
   "user": {
-    "name": "John Doe",
-    "username": "johndoe"
+    "_id": "6580bc636a007fbc371a0993",
+    "name": "Sidharth Sethi",
+    "username": "sidharth_sethi"
   },
-  "title": "My First Post",
+  "title": "Amazing Travel Adventure",
   "category": "Travel",
-  "description": "This is the content of my first post.",
-  "likes": { "_id": "609d77e4f5275422a056ea0b", "like": [] },
-  "comments": { "_id": "609d77e4f5275422a056ea0c", "comment": [] },
-  "createdAt": "2021-05-13T14:17:00.628Z",
-  "updatedAt": "2021-05-13T14:17:00.628Z",
-  "__v": 0
-}
-```
-
-### Get User's Posts
-
-#### Request
-
-```http
-GET /api/posts/mine
-```
-
-#### Response
-
-```json
-[
-  {
-    "_id": "609d77e4f5275422a056ea0a",
-    "user": {
-      "name": "John Doe",
-      "username": "johndoe"
-    },
-    "title": "My First Post",
-    "category": "Travel",
-    "description": "This is the content of my first post.",
-    "likes": { "_id": "609d77e4f5275422a056ea0b", "like": [] },
-    "comments": { "_id": "609d77e4f5275422a056ea0c", "comment": [] },
-    "createdAt": "2021-05-13T14:17:00.628Z",
-    "updatedAt": "2021-05-13T14:17:00.628Z",
-    "__v": 0
-  }
-  // ... more posts
-]
-```
-
-### Update Post by ID
-
-#### Request
-
-```http
-PUT /api/posts/:id/update
-```
-
-```json
-{
-  "title": "Updated Post Title",
-  "category": "Life Advice",
-  "description": "This is the updated content of my post."
-}
-```
-
-#### Response
-
-```json
-{
-  "_id": "609d77e4f
-
-5275422a056ea0a",
-  "user": {
-    "name": "John Doe",
-    "username": "johndoe"
+  "description": "I recently had an incredible travel adventure to a beautiful destination. The landscapes were breathtaking, and I can't wait to share my experience with you!",
+  "createdAt": "2023-12-18T21:43:56.574Z",
+  "updatedAt": "2023-12-18T21:43:56.798Z",
+  "__v": 0,
+  "comments": {
+    "_id": "6580bd1c6a007fbc371a099a",
+    "comment": [
+      {
+        "user": "6580bc636a007fbc371a0993",
+        "comment": " I had a great adventure there too!!!",
+        "_id": "6580be206a007fbc371a0a26"
+      },
+      {
+        "user": "6580bc636a007fbc371a0993",
+        "comment": "HOHOHOHOHOOHOHOHO",
+        "_id": "6580be2f6a007fbc371a0a2a"
+      },
+      {
+        "user": "6580bc636a007fbc371a0993",
+        "comment": "Best!!!!!!!!",
+        "_id": "6580be436a007fbc371a0a31"
+      },
+      {
+        "user": "6580bc636a007fbc371a0993",
+        "comment": "Best!!!!!!!!",
+        "_id": "6580c9239511002753257e04"
+      },
+      {
+        "user": "6580bc636a007fbc371a0993",
+        "comment": "Niceeee",
+        "_id": "6580d1272c6ca9d992cd3213"
+      }
+    ]
   },
-  "title": "Updated Post Title",
-  "category": "Life Advice",
-  "description": "This is the updated content of my post.",
-  "likes": { "_id": "609d77e4f5275422a056ea0b", "like": [] },
-  "comments": { "_id": "609d77e4f5275422a056ea0c", "comment": [] },
-  "createdAt": "2021-05-13T14:17:00.628Z",
-  "updatedAt": "2021-05-14T08:30:00.000Z",
-  "__v": 0
+  "likes": {
+    "_id": "6580bd1c6a007fbc371a0998",
+    "like": [
+      {
+        "user": "6580bc636a007fbc371a0993",
+        "_id": "6580d0d92c6ca9d992cd320e"
+      }
+    ]
+  }
 }
 ```
 
-### Delete Post by ID
+### POST
 
-#### Request
+#### Create a Post
 
-```http
-DELETE /api/posts/:id/delete
+Logged-in user can create a new post.
+
+**URL**: `POST /api/posts/new`
+
+**Headers**:
+
+- `Content-Type`: application/json
+- `Authorization`: Bearer Token
+
+#### Example Request (HTTPS JS API)
+
+```javascript
+const requestOptions = {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer YOUR_TOKEN',
+  },
+  body: JSON.stringify({
+    title: 'Maldives Adventure',
+    category: 'Travel',
+    description: 'This was the most wonderful adventure I have been on.',
+  }),
+};
+
+fetch('https://localhost:3000/api/posts/new', requestOptions)
+  .then((response) => response.json())
+  .then((data) => console.log(data))
+  .catch((error) => console.error('Error:', error));
 ```
 
-#### Response
+#### Example Response
+
+```json
+{
+  "_id": "6580d71c2c6ca9d992cd3236",
+  "user": {
+    "_id": "6580bc636a007fbc371a0993",
+    "name": "Sidharth Sethi",
+    "username": "sidharth_sethi"
+  },
+  "title": "Fitness Journey Begins",
+  "category": "Life Advice",
+  "description": "Embarking on a fitness journey to prioritize health and well-being. Small steps lead to significant transformations.",
+  "createdAt": "2023-12-18T23:34:52.957Z",
+  "updatedAt": "2023-12-18T23:34:53.097Z",
+  "__v": 0,
+  "comments": {
+    "_id": "6580d71d2c6ca9d992cd323a",
+    "comment": []
+  },
+  "likes": {
+    "_id": "6580d71d2c6ca9d992cd3238",
+    "like": []
+  }
+}
+```
+
+### PUT
+
+#### Edit a Post
+
+Logged-in user can update his post.
+
+**URL**: `PUT /api/posts/me/:postId`
+
+**Headers**:
+
+- `Content-Type`: application/json
+- `Authorization`: Bearer Token
+
+#### Example Request (HTTPS JS API)
+
+```javascript
+const requestOptions = {
+  method: 'PUT',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer YOUR_TOKEN',
+  },
+  body: JSON.stringify({
+    title: 'Mumbai Adventures',
+  }),
+};
+
+fetch(
+  'https://localhost:3000/api/posts/me/6580bd1c6a007fbc371a0996',
+  requestOptions
+)
+  .then((response) => response.json())
+  .then((data) => console.log(data))
+  .catch((error) => console.error('Error:', error));
+```
+
+#### Example Response
+
+```json
+{
+  "_id": "6580bd1c6a007fbc371a0996",
+  "user": {
+    "_id": "6580bc636a007fbc371a0993",
+    "name": "Sidharth Sethi",
+    "username": "sidharth_sethi"
+  },
+  "title": "Fitness Journey Begins",
+  "category": "Life Advice",
+  "description": "Embarking on a fitness journey to prioritize health and well-being. Small steps lead to significant transformations.",
+  "createdAt": "2023-12-18T21:43:56.574Z",
+  "updatedAt": "2023-12-18T23:35:56.782Z",
+  "__v": 0,
+  "comments": {
+    "_id": "6580bd1c6a007fbc371a099a",
+    "comment": [
+      {
+        "user": "6580bc636a007fbc371a0993",
+        "comment": " I had a great adventure there too!!!",
+        "_id": "6580be206a007fbc371a0a26"
+      },
+      {
+        "user": "6580bc636a007fbc371a0993",
+        "comment": "HOHOHOHOHOOHOHOHO",
+        "_id": "6580be2f6a007fbc371a0a2a"
+      },
+      {
+        "user": "6580bc636a007fbc371a0993",
+        "comment": "Best!!!!!!!!",
+        "_id": "6580be436a007fbc371a0a31"
+      },
+      {
+        "user": "6580bc636a007fbc371a0993",
+        "comment": "Best!!!!!!!!",
+        "_id": "6580c9239511002753257e04"
+      },
+      {
+        "user": "6580bc636a007fbc371a0993",
+        "comment": "Niceeee",
+        "_id": "6580d1272c6ca9d992cd3213"
+      }
+    ]
+  },
+  "likes": {
+    "_id": "6580bd1c6a007fbc371a0998",
+    "like": [
+      {
+        "user": "6580bc636a007fbc371a0993",
+        "_id": "6580d0d92c6ca9d992cd320e"
+      }
+    ]
+  }
+}
+```
+
+### DELETE
+
+#### Delete a Post
+
+Logged-in user can delete his post by passing in the Id in the URL.
+
+**URL**: `DELETE /api/posts/me/:postId`
+
+**Headers**:
+
+- `Authorization`: Bearer Token
+
+#### Example Request (HTTPS JS API)
+
+```javascript
+const requestOptions = {
+  method: 'DELETE',
+  headers: {
+    'Authorization': 'Bearer YOUR_TOKEN
+
+'
+  },
+};
+
+fetch('https://localhost:3000/api/posts/me/6580bd1c6a007fbc371a0996', requestOptions)
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+```
+
+#### Example Response
 
 ```json
 {
@@ -380,24 +842,57 @@ DELETE /api/posts/:id/delete
 
 ### Toggle Like
 
-#### Request
+#### Like/Unlike a Post
 
-```http
-POST /api/likes/toggle
-```
+Toggle like on a post. If the user has already liked the post, it unlikes it, and vice versa.
+
+**URL**: `POST /api/posts/like`
+
+**Headers**:
+
+- `Content-Type: application/json`
+- Bearer Token (Authorization)
+
+**Body**:
 
 ```json
 {
-  "postId": "609d77e4f5275422a056ea0a"
+  "postId": "6580bd3f6a007fbc371a09a8"
 }
 ```
 
-#### Response
+#### Example Request (HTTPS JS API)
+
+```javascript
+const requestOptions = {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer YOUR_TOKEN',
+  },
+  body: JSON.stringify({
+    postId: '6580bd1c6a007fbc371a0996',
+  }),
+};
+
+fetch('https://localhost:3000/api/posts/like', requestOptions)
+  .then((response) => response.json())
+  .then((data) => console.log(data))
+  .catch((error) => console.error('Error:', error));
+```
+
+#### Example Response
 
 ```json
 {
   "message": "The post has been unliked",
   "Number of likes on this post": 0
+}
+
+OR
+
+{
+  "Number of likes on this post": 1
 }
 ```
 
@@ -405,137 +900,172 @@ POST /api/likes/toggle
 
 ### Add Comment
 
-#### Request
+#### Add a Comment to a Post
 
-```http
-POST /api/comments/add
-```
+Add a new comment to a post.
+
+**URL**: `POST /api/posts/comment`
+
+**Headers**:
+
+- `Content-Type: application/json`
+- Bearer Token (Authorization)
+
+**Body**:
 
 ```json
 {
-  "postId": "609d77e4f5275422a056ea0a",
-  "comment": "Great post!"
+  "postId": "6580bd1c6a007fbc371a0996",
+  "comment": "Amazing post!"
 }
 ```
 
-#### Response
+#### Example Request (HTTPS JS API)
+
+```javascript
+const requestOptions = {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer YOUR_TOKEN',
+  },
+  body: JSON.stringify({
+    postId: '6580bd1c6a007fbc371a0996',
+    comment: 'Amazing post!',
+  }),
+};
+
+fetch('https://localhost:3000/api/posts/comment, requestOptions)
+  .then((response) => response.json())
+  .then((data) => console.log(data))
+  .catch((error) => console.error('Error:', error));
+```
+
+#### Example Response
 
 ```json
 {
-  "_id": "609d77e4f5275422a056ea0a",
+  "_id": "6580bd1c6a007fbc371a0996",
   "comment": [
     {
-      "user": "609d77e4f5275422a056ea0d",
-      "comment": "Great post!",
-      "_id": "609d77e4f5275422a056ea0e"
+      "_id": "6298c1aaa8a0d999b83eb68b",
+      "user": "user123",
+      "comment": "Amazing post!"
     }
   ]
 }
 ```
 
-### Delete Comment
-
-#### Request
-
-```http
-DELETE /api/comments/delete
-```
-
-```json
-{
-  "postId": "609d77e4f5275422a056ea0a",
-  "commentId": "609d77e4f5275422a056ea0e"
-}
-```
-
-#### Response
-
-```json
-{
-  "success": "Comment deleted"
-}
-```
-
 ### Update Comment
 
-#### Request
+#### Update a Comment on a Post
 
-```http
-PUT /api/comments/update
-```
+Update an existing comment on a post.
+
+**URL**: `PUT /api/posts/comment`
+
+**Headers**:
+
+- `Content-Type: application/json`
+- Bearer Token (Authorization)
+
+**Body**:
 
 ```json
 {
-  "postId": "609d77e4f5275422a056ea0a",
-  "commentId": "609d77e4f5275422a056ea0e",
+  "postId": "6580bd1c6a007fbc371a0996",
+  "commentId": "6298c1aaa8a0d999b83eb68b",
   "comment": "Updated comment!"
 }
 ```
 
-#### Response
+#### Example Request (HTTPS JS API)
+
+```javascript
+const requestOptions = {
+  method: 'PUT',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer YOUR_TOKEN',
+  },
+  body: JSON.stringify({
+    postId: '6580bd1c6a007fbc371a0996',
+    commentId: '6298c1aaa8a0d999b83eb68b',
+    comment: 'Updated comment!',
+  }),
+};
+
+fetch('https://localhost:3000/api/posts/comment', requestOptions)
+  .then((response) => response.json())
+  .then((data) => console.log(data))
+  .catch((error) => console.error('Error:', error));
+```
+
+#### Example Response
 
 ```json
 {
   "success": "Comment updated",
   "allCommentsOnThisPost": {
-    "_id": "609d77e4f5275422a056ea0a",
+    "_id": "6580bd1c6a007fbc371a0996",
     "comment": [
       {
-        "user": "609d77e4f5275422a056ea0d",
-        "comment": "Updated comment!",
-        "_id": "609d77e4f5275422a056ea0e"
+        "_id": "6298c1aaa8a0d999b83eb68b",
+        "user": "user123",
+        "comment": "Updated comment!"
       }
     ]
   }
 }
 ```
 
-## Password Reset Routes
+### Delete Comment
 
-### Request Password Reset
+#### Delete a Comment from a Post
 
-#### Request
+Delete a comment from a post.
 
-```http
-POST /api/forgot-password
-```
+**URL**: `DELETE /api/posts/comment/`
 
-```json
-{
-  "email": "john.doe@example.com"
-}
-```
+**Headers**:
 
-#### Response
+- `Content-Type: application/json`
+- Bearer Token (Authorization)
+
+**Body**:
 
 ```json
 {
-  "success": "A code has been sent to your email. Please check and use it."
+  "postId": "6580bd1c6a007fbc371a0996",
+  "commentId": "6298c1aaa8a0d999b83eb68b"
 }
 ```
 
-### Set New Password
+#### Example Request (HTTPS JS API)
 
-#### Request
+```javascript
+const requestOptions = {
+  method: 'DELETE',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer YOUR_TOKEN',
+  },
+  body: JSON.stringify({
+    postId: '6580bd1c6a007fbc371a0996',
+    commentId: '6298c1aaa8a0d999b83eb68b',
+  }),
+};
 
-```http
-POST /api/set-new-password
+fetch('https://localhost:3000/api/posts/comment/', requestOptions)
+  .then((response) => response.json())
+  .then((data) => console.log(data))
+  .catch((error) => console.error('Error:', error));
 ```
+
+#### Example Response
 
 ```json
 {
-  "email": "john.doe@example.com",
-  "newPassword": "newsecurepassword",
-  "code": 1234
+  "success": "Comment deleted"
 }
 ```
-
-#### Response
-
-```json
-{
-  "success": "Password updated successfully!"
-}
-```
-
-Feel free to reach out if you have any questions or need further clarification on any of the API routes.
