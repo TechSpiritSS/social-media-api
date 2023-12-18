@@ -38,13 +38,13 @@ This Node.js API serves as the backend for the Banao platform. It allows users t
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/username/repo.git
+   git clone https://github.com/TechSpiritSS/social-media-api.git
    ```
 
 2. Install the dependencies:
 
    ```bash
-   cd your-repo
+   cd social-media-api
    npm install
    ```
 
@@ -66,7 +66,7 @@ This Node.js API serves as the backend for the Banao platform. It allows users t
 
 ## Usage
 
-The API can be accessed at `http://localhost:3000/`.
+The API can be accessed at `https://social-media-api-roan.vercel.app/`
 
 ## API Endpoints
 
@@ -165,7 +165,7 @@ const requestOptions = {
   }),
 };
 
-fetch('https://localhost:3000/api/users', requestOptions)
+fetch('https://social-media-api-roan.vercel.app/api/users', requestOptions)
   .then((response) => response.json())
   .then((data) => console.log(data))
   .catch((error) => console.error('Error:', error));
@@ -218,7 +218,10 @@ const requestOptions = {
   }),
 };
 
-fetch('https://localhost:3000/api/users/login', requestOptions)
+fetch(
+  'https://social-media-api-roan.vercel.app/api/users/login',
+  requestOptions
+)
   .then((response) => response.json())
   .then((data) => console.log(data))
   .catch((error) => console.error('Error:', error));
@@ -269,7 +272,10 @@ const requestOptions = {
   }),
 };
 
-fetch('https://localhost:3000/api/users/forgot-password', requestOptions)
+fetch(
+  'https://social-media-api-roan.vercel.app/api/users/forgot-password',
+  requestOptions
+)
   .then((response) => response.json())
   .then((data) => console.log(data))
   .catch((error) => console.error('Error:', error));
@@ -322,7 +328,10 @@ const requestOptions = {
   }),
 };
 
-fetch('https://localhost:3000/api/users/set-new-password', requestOptions)
+fetch(
+  'https://social-media-api-roan.vercel.app/api/users/set-new-password',
+  requestOptions
+)
   .then((response) => response.json())
   .then((data) => console.log(data))
   .catch((error) => console.error('Error:', error));
@@ -358,7 +367,7 @@ const requestOptions = {
   },
 };
 
-fetch('https://localhost:3000/api/posts/all', requestOptions)
+fetch('https://social-media-api-roan.vercel.app/api/posts/all', requestOptions)
   .then((response) => response.json())
   .then((data) => console.log(data))
   .catch((error) => console.error('Error:', error));
@@ -423,7 +432,7 @@ const requestOptions = {
   },
 };
 
-fetch('https://localhost:3000/api/posts/me', requestOptions)
+fetch('https://social-media-api-roan.vercel.app/api/posts/me', requestOptions)
   .then((response) => response.json())
   .then((data) => console.log(data))
   .catch((error) => console.error('Error:', error));
@@ -489,7 +498,7 @@ const requestOptions = {
 };
 
 fetch(
-  'https://localhost:3000/api/posts/me/6580bd1c6a007fbc371a0996',
+  'https://social-media-api-roan.vercel.app/api/posts/me/6580bd1c6a007fbc371a0996',
   requestOptions
 )
   .then((response) => response.json())
@@ -578,7 +587,7 @@ const requestOptions = {
 };
 
 fetch(
-  'https://localhost:3000/api/posts/all/6580bd1c6a007fbc371a0996',
+  'https://social-media-api-roan.vercel.app/api/posts/all/6580bd1c6a007fbc371a0996',
   requestOptions
 )
   .then((response) => response.json())
@@ -673,7 +682,7 @@ const requestOptions = {
   }),
 };
 
-fetch('https://localhost:3000/api/posts/new', requestOptions)
+fetch('https://social-media-api-roan.vercel.app/api/posts/new', requestOptions)
   .then((response) => response.json())
   .then((data) => console.log(data))
   .catch((error) => console.error('Error:', error));
@@ -734,7 +743,7 @@ const requestOptions = {
 };
 
 fetch(
-  'https://localhost:3000/api/posts/me/6580bd1c6a007fbc371a0996',
+  'https://social-media-api-roan.vercel.app/api/posts/me/6580bd1c6a007fbc371a0996',
   requestOptions
 )
   .then((response) => response.json())
@@ -824,7 +833,7 @@ const requestOptions = {
   },
 };
 
-fetch('https://localhost:3000/api/posts/me/6580bd1c6a007fbc371a0996', requestOptions)
+fetch('https://social-media-api-roan.vercel.app/api/posts/me/6580bd1c6a007fbc371a0996', requestOptions)
   .then(response => response.json())
   .then(data => console.log(data))
   .catch(error => console.error('Error:', error));
@@ -875,7 +884,7 @@ const requestOptions = {
   }),
 };
 
-fetch('https://localhost:3000/api/posts/like', requestOptions)
+fetch('https://social-media-api-roan.vercel.app/api/posts/like', requestOptions)
   .then((response) => response.json())
   .then((data) => console.log(data))
   .catch((error) => console.error('Error:', error));
@@ -935,7 +944,7 @@ const requestOptions = {
   }),
 };
 
-fetch('https://localhost:3000/api/posts/comment, requestOptions)
+fetch('https://social-media-api-roan.vercel.app/api/posts/comment, requestOptions)
   .then((response) => response.json())
   .then((data) => console.log(data))
   .catch((error) => console.error('Error:', error));
@@ -995,7 +1004,10 @@ const requestOptions = {
   }),
 };
 
-fetch('https://localhost:3000/api/posts/comment', requestOptions)
+fetch(
+  'https://social-media-api-roan.vercel.app/api/posts/comment',
+  requestOptions
+)
   .then((response) => response.json())
   .then((data) => console.log(data))
   .catch((error) => console.error('Error:', error));
@@ -1056,7 +1068,10 @@ const requestOptions = {
   }),
 };
 
-fetch('https://localhost:3000/api/posts/comment/', requestOptions)
+fetch(
+  'https://social-media-api-roan.vercel.app/api/posts/comment/',
+  requestOptions
+)
   .then((response) => response.json())
   .then((data) => console.log(data))
   .catch((error) => console.error('Error:', error));
