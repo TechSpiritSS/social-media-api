@@ -72,11 +72,11 @@ The API can be accessed at `https://social-media-api-roan.vercel.app/`
 
 ### User Routes
 
-| Endpoint              | Method | Description            |
-| --------------------- | ------ | ---------------------- |
-| `/api/users/register` | POST   | Register a new user    |
-| `/api/users/login`    | POST   | Login an existing user |
-| `/api/users/profile`  | GET    | Get user profile       |
+| Endpoint             | Method | Description            |
+| -------------------- | ------ | ---------------------- |
+| `/api/users`         | POST   | Register a new user    |
+| `/api/users/login`   | POST   | Login an existing user |
+| `/api/users/profile` | GET    | Get user profile       |
 
 ### Post Routes
 
@@ -130,7 +130,7 @@ Errors are handled using a custom error handler middleware. Detailed error messa
 
 Create a new user account.
 
-**URL**: `POST /api/users/register`
+**URL**: `POST /api/users`
 
 **Headers**:
 
